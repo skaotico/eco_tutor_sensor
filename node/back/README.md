@@ -1,73 +1,131 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Proyecto Eco Tutor Sensor
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este proyecto es una aplicación backend construida con NestJS que gestiona sensores, sectores, datos meteorológicos y más. La estructura del proyecto está organizada en módulos para facilitar el mantenimiento y la escalabilidad.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Estructura del Proyecto
 
-## Description
+├── app
+│   ├── arbol
+│   │   ├── constants
+│   │   ├── dto
+│   │   └── schema
+│   ├── axios
+│   ├── common
+│   │   ├── dto
+│   │   └── filters
+│   ├── cron
+│   ├── database
+│   ├── openuv
+│   │   ├── constants
+│   │   ├── dto
+│   │   ├── interface
+│   │   └── type
+│   ├── sector
+│   │   ├── dto
+│   │   └── schema
+│   ├── sensor
+│   │   ├── dto
+│   │   └── schema
+│   ├── utils
+│   └── weather
+│       ├── constants
+│       ├── enum
+│       └── interface
+└── img
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Descripción de Carpetas
 
-## Installation
+- **app/**: Contiene todos los módulos y funcionalidades principales de la aplicación.
+- **arbol/**: Módulo relacionado con árboles (constants, DTOs y esquemas).
+- **axios/**: Configuración y servicios para realizar peticiones HTTP con Axios.
+- **common/**: Funcionalidades comunes como DTOs y filtros globales.
+- **cron/**: Tareas programadas con @nestjs/schedule.
+- **database/**: Configuración y conexión a la base de datos.
+- **openuv/**: Módulo para interactuar con la API de OpenUV (constants, DTOs, interfaces y tipos).
+- **sector/**: Módulo para gestionar sectores (DTOs y esquemas).
+- **sensor/**: Módulo para gestionar sensores (DTOs y esquemas).
+- **utils/**: Utilidades y helpers reutilizables.
+- **weather/**: Módulo para gestionar datos meteorológicos (constants, enums e interfaces).
+- **img/**: Carpeta para almacenar imágenes relacionadas con el proyecto.
 
-```bash
-$ npm install
-```
+## Requisitos Previos
 
-## Running the app
+- **Node.js**: Versión 16 o superior.
+- **npm**: Versión 7 o superior.
+- **MongoDB**: Base de datos para almacenar la información.
+- **API Key de OpenUV**: Si utilizas el módulo openuv, necesitarás una clave API.
 
-```bash
-# development
-$ npm run start
+## Instalación
 
-# watch mode
-$ npm run start:dev
+1. Clona el repositorio:
 
-# production mode
-$ npm run start:prod
-```
+    ```bash
+    git clone https://github.com/tu-usuario/eco-tutor-sensor.git
+    cd eco-tutor-sensor
+    ```
 
-## Test
+2. Instala las dependencias:
 
-```bash
-# unit tests
-$ npm run test
+    ```bash
+    npm install
+    ```
 
-# e2e tests
-$ npm run test:e2e
+3. Configura las variables de entorno:  
+    Crea un archivo `.env` en la raíz del proyecto y agrega las siguientes variables:
 
-# test coverage
-$ npm run test:cov
-```
+    ```
+    MONGO_URI=mongodb://localhost:27017/eco_tutor_sensor
+    PORT=3000
+    OPENUV_API_KEY=tu_api_key_de_openuv
+    ```
 
-## Support
+4. Compila el proyecto:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+    ```bash
+    npm run build
+    ```
 
-## Stay in touch
+## Uso
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- **Iniciar la aplicación en modo desarrollo**:
 
-## License
+    ```bash
+    npm run start:dev
+    ```
 
-Nest is [MIT licensed](LICENSE).
+- **Iniciar la aplicación en modo producción**:
+
+    ```bash
+    npm run start:prod
+    ```
+
+- **Acceder a la documentación de la API**:  
+    Abre tu navegador y visita `http://localhost:3000/api` para ver la documentación generada por Swagger.
+
+## Scripts Disponibles
+
+- `npm run build`: Compila el proyecto.
+- `npm run start`: Inicia la aplicación.
+- `npm run start:dev`: Inicia la aplicación en modo desarrollo con recarga en caliente.
+- `npm run start:prod`: Inicia la aplicación en modo producción.
+- `npm run lint`: Ejecuta ESLint para verificar y corregir problemas de estilo.
+- `npm run test`: Ejecuta las pruebas unitarias.
+- `npm run test:e2e`: Ejecuta las pruebas end-to-end.
+
+## Contribución
+
+Si deseas contribuir a este proyecto, sigue estos pasos:
+
+1. Haz un fork del repositorio.
+2. Crea una nueva rama (`git checkout -b feature/nueva-funcionalidad`).
+3. Realiza tus cambios y haz commit (`git commit -am 'Añade nueva funcionalidad'`).
+4. Haz push a la rama (`git push origin feature/nueva-funcionalidad`).
+5. Abre un Pull Request.
+
+## Licencia
+
+Este proyecto no tiene una licencia específica y está destinado únicamente para uso privado. No se permite la redistribución o el uso comercial sin permiso explícito.
+
+## Contacto
+
+Si tienes alguna pregunta o sugerencia, no dudes en contactarme en **yos.andrade@gmail.com**.

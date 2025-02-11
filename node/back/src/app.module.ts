@@ -12,6 +12,11 @@ import { OpenuvModule } from './app/openuv/openuv.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronService } from './app/cron/cron.service';
 import { CronModule } from './app/cron/cron.module';
+import { UvModule } from './app/uv/uv.module';
+import { CloudinaryModule } from './app/cloudinary/cloudinary.module';
+import { CloudinaryController } from './app/cloudinary/cloudinary.controller';
+import { UbicacionModule } from './app/ubicacion/ubicacion.module';
+import { ImagendediagnosticoModule } from './app/imagenDeDiagnostico/imagendediagnostico.module';
 
 /**
  * Módulo principal de la aplicación.
@@ -31,8 +36,12 @@ import { CronModule } from './app/cron/cron.module';
     WeatherModule,
     OpenuvModule,
     CronModule,
+    UvModule,
+    CloudinaryModule,
+    UbicacionModule,
+    ImagendediagnosticoModule,
   ],
-  controllers: [SensorController, ArbolController],
+  controllers: [SensorController, ArbolController, CloudinaryController],
   providers: [WeatherService, CronService],
 })
 export class AppModule {}

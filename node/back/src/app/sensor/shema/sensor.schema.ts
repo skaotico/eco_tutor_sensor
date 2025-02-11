@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class Sensor extends Document {
+  
   @Prop({ required: true })
   temperatura_ambiental: string;
 

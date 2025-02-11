@@ -6,65 +6,83 @@ import {
   Delete,
   Put,
   Post,
+  NotFoundException,
+  Res,
+  HttpException,
+  HttpStatus,
+  Query,
+  BadRequestException,
 } from '@nestjs/common';
+import { Response } from 'express';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { ArbolService } from './arbol.service';
-import { Arbol } from './shema/arbol.schema';
+import { Arbol } from './schema/arbol.schema';
 import { ArbolDto } from './dto/create-arbol.dto';
 import { ResponseDto } from '../common/dto/response.dto';
 import { EstadisticasArbolDto } from './dto/estadisticas-arbol.dto';
+import { ObtenerDiagramaHumedadDto } from './dto/obtener-diagrama-humedad.dto';
+import { validate } from 'class-validator';
 
 @ApiTags('Arbol')
 @Controller('arbol')
 export class ArbolController {
   constructor(private readonly arbolService: ArbolService) {}
 
-  // @Post()
-  // @ApiOperation({ summary: 'Crear un árbol con sensores asociados' })
-  // @ApiResponse({
-  //   status: 201,
-  //   description: 'El árbol ha sido creado exitosamente',
-  //   type: Arbol,
-  // })
-  // @ApiResponse({ status: 400, description: 'Solicitud incorrecta' })
-  // @ApiBody({ type: ArbolDto })
-  // async create(@Body() arbolDto: ArbolDto): Promise<Arbol> {
-  //   const sensoresMapped = arbolDto.sensores.map((sensor) => {
-  //     return {
-  //       id_sensor: sensor.id_sensor,
-  //       nombre_sensor: sensor.nombre_sensor,
-  //       humedad: sensor.humedad,
-  //       fecha: new Date(),
-  //     };
-  //   });
+  @Get('qr/:nombre_comun')
+  async generarQrPorNombreComun(
+    @Param('nombre_comun') nombre_comun: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    try {
+      console.log('entre con el valor ', nombre_comun);
+      const qrBuffer =
+        await this.arbolService.generarQrPorNombreComun(nombre_comun);
 
-  //   // return this.arbolService.create({
-  //   //   ...arbolDto,
-  //   //   sensores: sensoresMapped,
-  //   // });
-  // }
+      console.log('este es el buffer', qrBuffer);
+      // Establecer el tipo de contenido y enviar el buffer
+      res.setHeader('Content-Type', 'image/png'); // Cambiado de `res.set()`
+      res.send(qrBuffer); // Cambiado de `res.send()`
+    } catch (error) {
+      throw new NotFoundException('Error al generar el QR');
+    }
+  }
 
   @Get()
   @ApiOperation({ summary: 'Obtener todos los árboles' })
-  @ApiResponse({ status: 200, description: 'Lista de árboles', type: [Arbol] })
-  findAll(): Promise<Arbol[]> {
-    return this.arbolService.findAll();
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de árboles',
+    type: ResponseDto,
+    isArray: false,
+  })
+  async listarTodosLosArboles(): Promise<ResponseDto<Arbol[]>> {
+    try {
+      const arboles = await this.arbolService.listarTodosLosArboles();
+      return new ResponseDto<Arbol[]>(200, 'Operación exitosa', arboles);
+    } catch (error) {
+      throw new HttpException(
+        'No se pudieron obtener los árboles',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  @Get(':nombre_comun')
-  @ApiOperation({ summary: 'Obtener un árbol por su nombre común' })
-  @ApiParam({ name: 'nombre_comun', description: 'Nombre común del árbol' })
-  @ApiResponse({ status: 200, description: 'Árbol encontrado', type: Arbol })
-  @ApiResponse({ status: 404, description: 'Árbol no encontrado' })
-  findOne(@Param('nombre_comun') nombre_comun: string): Promise<Arbol> {
-    return this.arbolService.findOne(nombre_comun);
-  }
+  // @Get(':nombre_comun')
+  // @ApiOperation({ summary: 'Obtener un árbol por su nombre común' })
+  // @ApiParam({ name: 'nombre_comun', description: 'Nombre común del árbol' })
+  // @ApiResponse({ status: 200, description: 'Árbol encontrado', type: Arbol })
+  // @ApiResponse({ status: 404, description: 'Árbol no encontrado' })
+  // async findOne(nombre_comun: string): Promise<ResponseDto<Arbol>> {
+  //   const arbol = this.arbolService.buscarArbolPorNombre(nombre_comun);
+  //   return new ResponseDto<Arbol>(200, 'Operación exitosa', arbol);
+  // }
 
   @Put(':nombre_comun')
   @ApiOperation({ summary: 'Actualizar un árbol por su nombre común' })
@@ -130,5 +148,61 @@ export class ArbolController {
       'estadísticas creadas exitosamente',
       data,
     );
+  }
+
+  /**
+   * Obtiene el diagrama de humedad de un árbol en una fecha específica.
+   *
+   * @param {ObtenerDiagramaHumedadDto} obtenerDiagramaHumedadDto - DTO con los parámetros de entrada.
+   * @returns {Promise<any>} Un objeto con los datos del diagrama de humedad.
+   * @throws {BadRequestException} Si los parámetros son inválidos.
+   * @throws {NotFoundException} Si no se encuentran datos.
+   */
+  @Get('diagrama-humedad')
+  @ApiOperation({
+    summary:
+      'Obtiene el diagrama de humedad de un árbol en una fecha específica',
+  })
+  @ApiQuery({
+    name: 'fecha',
+    type: String,
+    example: '2024-08-22',
+    description: 'Fecha en formato ISO (YYYY-MM-DD)',
+  })
+  @ApiQuery({
+    name: 'nombre_comun',
+    type: String,
+    example: 'Roble',
+    description: 'Nombre común del árbol',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Diagrama de humedad generado correctamente',
+  })
+  @ApiResponse({ status: 400, description: 'Parámetros inválidos' })
+  @ApiResponse({ status: 404, description: 'Datos no encontrados' })
+  async obtenerDiagramaHumedad(
+    @Query() obtenerDiagramaHumedadDto: ObtenerDiagramaHumedadDto,
+    @Res() res: Response,
+  ): Promise<any> {
+    const { fecha, nombre_comun } = obtenerDiagramaHumedadDto;
+
+    // Validación automática por DTO
+    const errores = await validate(obtenerDiagramaHumedadDto);
+    if (errores.length > 0) {
+      throw new BadRequestException('Parámetros inválidos.');
+    }
+
+    const data = await this.arbolService.obtenerDiagramaHumedad(
+      fecha,
+      nombre_comun,
+    );
+    res.set({
+      'Content-Type': 'image/png', // Cambiado a image/png para devolver una imagen
+      'Content-Length': data.length,
+      'Content-Disposition': 'inline; filename="diagrama-humedad.png"', // Cambiado a .png
+    });
+
+    res.send(data);
   }
 }

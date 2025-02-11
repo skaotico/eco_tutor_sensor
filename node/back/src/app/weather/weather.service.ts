@@ -35,8 +35,8 @@ export class WeatherService {
   async getWeatherData(): Promise<CurrentWeather> {
     try {
       const params = {
-        latitude: String(-33.613313435305706),
-        longitude: String(-70.54289373567948),
+        latitude: String(-33.6136024),
+        longitude: String(-70.5508398),
         current_weather: 'true',
         temperature_unit: 'celsius',
       };
@@ -45,7 +45,7 @@ export class WeatherService {
 
       const response = await this.axiosInstance.get(url);
       const data = response.data;
-
+      console.log();
       return data.current_weather;
     } catch (error) {
       console.error(WeatherServiceConstants.ERROR_MSG, error);

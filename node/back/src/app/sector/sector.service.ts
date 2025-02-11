@@ -6,7 +6,7 @@ import {
 import { CreateSectorDto } from './dto/create-sector.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Sector } from './shema/sector.schema';
-import { Arbol } from '../arbol/shema/arbol.schema';
+import { Arbol } from '../arbol/schema/arbol.schema';
 import { Model } from 'mongoose';
 import { Sensor } from '../sensor/shema/sensor.schema';
 import { CreateSensorDto } from '../sensor/dto/create-sensor.dto';
@@ -199,7 +199,7 @@ export class SectorService {
       );
     }
     const arbolObj = arbol.toObject();
-    console.log(arbolObj._id);
+    // console.log(arbolObj._id);
 
     const sectorConArbol = await this.sectorModel
       .findOne({ arboles: arbolObj._id })

@@ -6,7 +6,7 @@ import { OpenuvService } from '../openuv/openuv.service';
 export class CronService {
   constructor(private readonly openuvService: OpenuvService) {}
 
-  //   @Cron('* * * * *')
+  //   @Cron('06 * * * *')
   //   async handleCron() {
   //     try {
   //       const openUVData = await this.openuvService.getOpenUVData();

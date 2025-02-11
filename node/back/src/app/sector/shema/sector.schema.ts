@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Arbol } from 'src/app/arbol/shema/arbol.schema'; // Importar el esquema de Árbol
+import { Arbol } from 'src/app/arbol/schema/arbol.schema'; // Importar el esquema de Árbol
 import { Schema as MongooseSchema } from 'mongoose';
 
 @Schema()

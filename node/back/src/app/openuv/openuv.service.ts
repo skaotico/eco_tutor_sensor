@@ -33,8 +33,8 @@ export class OpenuvService {
       const url = `${this.baseUrl}?lat=${this.lat}&lng=${this.lng}&alt=100&dt=`;
 
       const curlCommand = `curl -X GET '${url}' -H 'x-access-token: ${accessToken}' -H 'Content-Type: application/json'`;
-      console.log('Generando comando curl:');
-      console.log(curlCommand);
+      // console.log('Generando comando curl:');
+      // console.log(curlCommand);
 
       const headers = {
         'x-access-token': accessToken,
